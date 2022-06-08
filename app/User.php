@@ -12,6 +12,7 @@ class User extends Authenticatable
 
     protected $table = "user";
     protected $primaryKey = "id";
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -39,4 +40,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Devuelve true si es administrador
+     *
+     * @return bool
+     */
+    public function esAdmin(): bool
+    {
+        return $this->type == 'E';
+    }
+
+    /**
+     * Devuelve true si es administrador
+     *
+     * @return bool
+     */
+    public function esCliente(): bool
+    {
+        return $this->type == 'C';
+    }
 }

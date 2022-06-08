@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Usuario;
 use App\Models\Servicio;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,22 +17,32 @@ use App\Http\Controllers\CitaController;
 |
 */
 
-//Cita
-Route::resource('citas', 'CitaController');
-
 Route::get('/', function () {
     return view('inicio');
 });
 
-Route::get('/sobreMi', function () {
-    return view('sobreMi');
-});
+//Cita
+Route::resource('citas', 'CitaController');
+
+Route::get('citas/generarPDF/{id}', [CitaController::class, 'generarPDF'])
+->name('generarPDF');
 
 Route::get('/citas', function () {
     return view('citas', [
         'servicios' => Servicio::all()
     ]);
 });
+
+//Users
+Route::resource('users', 'UserController');
+
+
+//Sobre mi
+Route::get('/sobreMi', function () {
+    return view('sobreMi');
+});
+
+
 
 Route::get('/admin', function () {
     return view('auth.login');
@@ -41,4 +52,6 @@ Route::get('/admin', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function(){
+    return view('inicio');
+})->name('home');

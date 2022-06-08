@@ -17,6 +17,7 @@ class CitaController extends Controller
     public function index()
     {
         //
+        return view('citas');
     }
 
     /**
@@ -37,8 +38,6 @@ class CitaController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // dd($request);
         // $request->validate([
         //     'nombre' => 'required|max:255',
         //     'numero' => 'required|numeric',
@@ -50,18 +49,22 @@ class CitaController extends Controller
         $servicio = Servicio::find($request->servicio);
 
         $factura = new Factura;
-        $factura->precio_total = $servicio->precio;
-        $factura->tiempo_total = $servicio->tiempo;
-        $factura->nombre = $request->nombre;
-        $factura->apellidos = $request->apellidos;
-        $factura->telefono = $request->telefono;
+        $factura->telefono = $request->numero;
         $factura->correo = $request->correo;
         $factura->start = $request->fechacita;
+
+        //Sumar minutos del servicio a la fecha para crear la fecha end
         $nuevaFecha = strtotime ( '+' . $servicio->tiempo .'minutes' , strtotime ($request->fechacita) );
-        dd($request->fechacita . "    ". $nuevaFecha);
-        $factura->end = $request->telefono;
+        $nuevaFecha = date ( 'Y-m-d H:i:s' , $nuevaFecha); 
+
+        $factura->end = $nuevaFecha;
         $factura->title = $servicio->nombre;
-        $factura->servicio_id = $request->servicio_id;
+        $factura->servicio_id = $request->servicio;
+        //Este para cliente
+        $factura->servicio_id = $request->servicio;
+        $factura->save();
+
+        return redirect('/citas');
 
 
     }
@@ -109,5 +112,22 @@ class CitaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+     /**
+     * Genera el pdf de una cita
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    public function generarPDF($id)
+    {
+        $factura = Factura::find($id);
+        $pdf = app('dompdf.wrapper');
+
+        $pdf->loadView('PDF.plantilla', compact('factura'));
+
+        return $pdf->stream('factura.pdf');
+
     }
 }
