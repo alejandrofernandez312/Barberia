@@ -72,23 +72,29 @@ class UserController extends Controller
     {
         //
         $request->validate([
-            'password' => 'required|min:4',
+            'nombre' => 'required|string',
+            'apellidos' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
         ]);
 
         $userExiste = User::where('email', $request->email)->first();
         if ($userExiste != null) {
             if ($id != $userExiste->id) {
-                return redirect()->back()->withInput($request->all())->with('error', 'Ese correo ya está asociado a un empleado');
+                return redirect()->back()->withInput($request->all())->with('error', 'Ese correo ya está asociado a un empleado.');
             }
         }
 
         $user = User::find($id);
+        $user->name = $request->nombre;
+        $user->surnames = $request->apellidos;
+        $user->phone = $request->telefono;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
 
         
-            return redirect()->back()->withInput($request->all())->with('success', 'Su perfil ha sido actualizado.');
+            return redirect()->back()->withInput($request->all())->with('message', '¡Su perfil ha sido actualizado!');
         
     }
 

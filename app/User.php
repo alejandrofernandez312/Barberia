@@ -13,6 +13,10 @@ class User extends Authenticatable
     protected $table = "user";
     protected $primaryKey = "id";
     public $timestamps = false;
+    protected $cargos = [
+        "C" => "Cliente",
+        "E" => "Empleado",
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'phone', 'type', 'surnames'
     ];
 
     /**
@@ -40,6 +44,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Devuelve el tipo si existe, si no devuelve Sin asignar
+     *
+     * @return void
+     */
+    public function descripcionTipo()
+    {
+        if (isset($this->cargos[$this->type])) {
+            return $this->cargos[$this->type];
+        } else {
+            return "Sin asignar";
+        }
+
+    }
 
     /**
      * Devuelve true si es administrador

@@ -6,6 +6,28 @@
     border: 2px solid red;
 }
 
-/* .container{
-    align-items: center;
-} */
+.nav-link:hover{
+    border-bottom: 2px solid rgb(80, 80, 80);
+}
+
+.nav-link:active{
+    background-color: rgb(80, 80, 80);
+}
+
+#tablaGestionCitas tr:hover{
+    background-color: lightgreen;
+}
+
+.icons{
+    text-decoration: none;
+    color: rgb(39, 39, 39);
+}
+
+#negando{
+    border: 2px solid black;
+    border-radius: 10%;
+    background-color: red;
+}
+
+
+

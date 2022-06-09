@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Factura;
 use App\Models\Servicio;
-use Auth;
+use App\User;
 
-
-class CitaController extends Controller
+class GestionCitasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,9 @@ class CitaController extends Controller
     public function index()
     {
         //
-        return view('citas');
+        return view('Gestion.gestionCitas', [
+            'facturas' => Factura::all()
+        ]);
     }
 
     /**
@@ -39,32 +40,7 @@ class CitaController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'nombre' => 'required|max:255',
-        //     'numero' => 'required|numeric',
-        //     'descripcion' => 'required',
-        //     'correo' => 'required|email',
-        //     'apellidos' => 'required',
-        // ]);
-
-
-        $servicio = Servicio::find($request->servicio);
-
-        $factura = new Factura;
-        $factura->start = $request->fechacita;
-
-        //Sumar minutos del servicio a la fecha para crear la fecha end
-        $nuevaFecha = strtotime ( '+' . $servicio->tiempo .'minutes' , strtotime ($request->fechacita) );
-        $nuevaFecha = date ( 'Y-m-d H:i:s' , $nuevaFecha); 
-        $factura->end = $nuevaFecha;
-        
-        $factura->servicio_id = $request->servicio;
-        $factura->cliente_id = Auth::user()->id;
-        $factura->save();
-
-        return redirect('/citas');
-
-
+        //
     }
 
     /**
@@ -76,6 +52,9 @@ class CitaController extends Controller
     public function show($id)
     {
         //
+        return view('verificarBorrado', [
+            'factura' => Factura::find($id)
+        ]);
     }
 
     /**
@@ -87,7 +66,11 @@ class CitaController extends Controller
     public function edit($id)
     {
         //
-        dd($id);
+        return view('Gestion.modificarCita', [
+            'factura' => Factura::find($id),
+            'clientes' => User::all(),
+            'servicios' => Servicio::all()
+        ]);
     }
 
     /**
@@ -100,6 +83,15 @@ class CitaController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $factura = Factura::find($id);
+        $factura->start = $request->fecha;
+        $factura->cliente_id = $request->cliente;
+        $factura->servicio_id = $request->servicio;
+        $factura->save();
+
+        return redirect()->route('gestion.index');
+
     }
 
     /**
@@ -111,24 +103,9 @@ class CitaController extends Controller
     public function destroy($id)
     {
         //
-        dd("Has eliminado la factura con id" . $id);
-        // Factura::destroy($id);
-    }
-
-     /**
-     * Genera el pdf de una cita
-     *
-     * @param  mixed $id
-     * @return void
-     */
-    public function generarPDF($id)
-    {
         $factura = Factura::find($id);
-        $pdf = app('dompdf.wrapper');
+        $factura->delete();
 
-        $pdf->loadView('PDF.plantilla', compact('factura'));
-
-        return $pdf->stream('factura.pdf');
-
+        return redirect()->route('gestion.index');
     }
 }

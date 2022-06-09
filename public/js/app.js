@@ -1,7 +1,9 @@
 $( document ).ready(function() {
     
 
-    // $('#slServicio').on('change', function() {
+    // Cambiar campos de pedir cita
+    
+    // $('#slCliente').on('change', function() {
     //     if(this.value == 0 ){
     //         $('#precioTotal').html("");
     //     }else{

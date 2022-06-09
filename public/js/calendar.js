@@ -3,11 +3,15 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             locale: 'es',
-            events: '/Eventos/obtenerEventos.php',
+            events: '/Ajax/obtenerEventos.php',
             allDaySlot: false,
-
-            
+            weekends: false,
             dateClick: function(info) {
+
+              $('#lblNombre, #lblApellidos, #lblNumero, #lblCorreo').css('display', 'block');
+              $('.admin').css('display', 'block');
+              $("#slServicio option[value='0']").attr("selected",true);
+              $("#slCliente option[value='0']").attr("selected",true);
 
                 //Comprobar las media hora
                 if((info.date.getHours() >= 9 && info.date.getHours() <= 13) || (info.date.getHours() >= 17 && info.date.getHours() <= 19)){
@@ -32,17 +36,35 @@
                           }
                         });
                       } );
-
                 }
                 
                 
 
               },
               eventClick:function(info){
-                  $titulo = info.event.title;
-                  $f_start = info.event.start;
+                  var id = info.event.extendedProps.cita;
+                  var titulo = info.event.title;
+                  var fechacita = info.event.start;
+                  var servicio = info.event.extendedProps.servicio;
+                  var cliente = info.event.extendedProps.cliente;
 
-                  alert($titulo + "    " + $f_start);
+                  var model = new bootstrap.Modal(document.getElementById('exampleModal'), {
+                    keyboard: false
+                });
+
+                var fecha = fechacita.getDate() + "-" + (fechacita.getMonth()+1) + "-" +  fechacita.getFullYear() + " " + fechacita.getHours() + ":" + fechacita.getMinutes() + ":" + fechacita.getSeconds();
+                window.location.hash = "formulario";
+                //Cambiar formato fecha
+                $('#lblFechacita').val(fecha);
+                // alert(fechacita);
+
+                $('#lblNombre, #lblApellidos, #lblNumero, #lblCorreo').css('display', 'none');
+                $('.admin').css('display', 'none');
+                $("#slServicio option[value='"+servicio+"']").attr("selected",true);
+                $("#slCliente option[value='"+cliente+"']").attr("selected",true);
+
+                model.show();
+
               }
               
         
@@ -50,8 +72,16 @@
 
         calendar.render();
 
+        
+
+        
+
 
     });
+
+    function cancelarCita(){
+      alert("Entra a cancela asdasr");
+    }
 
 
   

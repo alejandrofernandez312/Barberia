@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://github.com/viniciusmichelutti/jquery-stars/blob/master/dist/stars.min.js"></script>
     
 
     <script src="{{asset('js/calendar.js')}}"></script>
@@ -22,6 +24,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+    
 
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     
@@ -66,19 +70,32 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Trabajos</a>
           </li>
-          @if(auth()->user() && auth()->user()->esCliente())
+          @if(auth()->check() && auth()->user()->esCliente())
+            <li class="nav-item">
+              <a class="nav-link" href="{{url('misCitas')}}">Mis citas</a>
+            </li>
+          @endif
+          @if(auth()->user())
             <li class="nav-item">
               <a class="nav-link" href="{{url('citas')}}">Pedir cita</a>
             </li>
+          @else
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('login')}}">Pedir cita</a>
+          </li>
+          @endif
+          @if (auth()->user() && auth()->user()->esAdmin())
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('gestion.index')}}">Gestionar citas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('gestionusers.index')}}">Gestionar usuarios</a>
+            </li>
+          @endif
             <li class="nav-item">
               <a class="nav-link" href="{{url('sobreMi')}}">Sobre mi</a>
             </li>
-          @endif
-          @if(auth()->user() && auth()->user()->esAdmin())
-          <li class="nav-item">
-            <a class="nav-link" href="">Citas diarias</a>
-          </li>
-          @endif
+          
         </ul>
         <!-- Left links -->
       </div>

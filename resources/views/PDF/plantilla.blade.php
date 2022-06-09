@@ -37,10 +37,10 @@
             background-color: rgb(255, 255, 255);
         }
 
-        body{
-            background: rgb(205, 205, 205);
-            border-radius: 10px;
+        .table{
+            margin:0 auto;
         }
+
     </style>
 </head>
 
@@ -62,9 +62,9 @@
 
             </td>
             <td>
-                <p>{{ $factura->usuario->nombre }} {{ $factura->usuario->apellidos }}<br>
-                    {{ $factura->usuario->correo }}<br>
-                    {{ $factura->usuario->telefono }}
+                <p>{{ $factura->usuario->name }} {{ $factura->usuario->surnames }}<br>
+                    {{ $factura->usuario->email }}<br>
+                    {{ $factura->usuario->phone }}
                 </p>
             </td>
         </tr>
