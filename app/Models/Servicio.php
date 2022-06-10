@@ -9,4 +9,6 @@ class Servicio extends Model
     //
     protected $table = "servicio_barberia";
     protected $primaryKey = "servicio_id";
+    public $timestamps = false;
+    
 }

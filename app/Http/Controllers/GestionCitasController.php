@@ -106,10 +106,6 @@ class GestionCitasController extends Controller
         //
         $factura = Factura::find($id);
         
-        // if($factura->reseña_id != null){
-        //     $factura->reseña()->delete();
-        // }
-        
         $factura->delete();
 
         return redirect()->route('gestion.index');

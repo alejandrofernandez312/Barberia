@@ -11,6 +11,7 @@ use App\Http\Controllers\ReseñaController;
 use App\Http\Controllers\GestionCitasController;
 use App\Http\Controllers\GestionUsersController;
 use App\Http\Controllers\GestionResenasController;
+use App\Http\Controllers\GestionServiciosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Route::get('/misCitas', function () {
     return view('misCitas', [
         'facturas' => Factura::all()
     ]);
-});
+})->middleware('auth.basic');;
 
 
 //Reseñas
@@ -70,6 +71,15 @@ Route::resource('gestionresenas', 'GestionResenasController')
 Route::get('gestionResenas/borrar/{id}', [GestionResenasController::class, 'destroy'])
 ->middleware('auth.admin');
 
+
+//Gestion servicios
+Route::resource('gestionservicios', 'GestionServiciosController')
+->middleware('auth.admin');
+
+Route::get('gestionServicios/borrar/{id}', [GestionServiciosController::class, 'destroy'])
+->middleware('auth.admin');
+
+
 //Trabajos
 Route::get('/trabajos', function () {
     return view('trabajos');
@@ -88,7 +98,7 @@ Route::get('/citas', function () {
         'servicios' => Servicio::all(),
         'users'     => User::where('type', 'C')->get()
     ]);
-});
+})->middleware('auth.basic');
 
 //Users
 Route::resource('users', 'UserController');
@@ -109,5 +119,7 @@ Route::get('denegado', function(){
 Auth::routes();
 
 Route::get('/home', function(){
-    return view('inicio');
+    return view('inicio', [
+        'facturas' => Factura::where('reseña_id', '!=', 'null')->get()
+    ]);
 })->name('home');
