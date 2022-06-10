@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Servicio;
 use App\Models\Usuario;
+use App\Models\Reseña;
 
 class Factura extends Model
 {
@@ -32,5 +33,15 @@ class Factura extends Model
     public function Usuario()
     {
         return $this->belongsTo(Usuario::class, 'cliente_id');
+    }
+
+     /**
+     * Asocia la factura con la reseña
+     *
+     * @return void
+     */
+    public function Reseña()
+    {
+        return $this->belongsTo(Reseña::class, 'reseña_id');
     }
 }

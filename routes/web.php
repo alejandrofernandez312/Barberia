@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\User;
 use App\Models\Servicio;
 use App\Models\Factura;
+use App\Models\Reseña;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReseñaController;
 use App\Http\Controllers\GestionCitasController;
 use App\Http\Controllers\GestionUsersController;
+use App\Http\Controllers\GestionResenasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +24,9 @@ use App\Http\Controllers\GestionUsersController;
 */
 
 Route::get('/', function () {
-    return view('inicio');
+    return view('inicio', [
+        'facturas' => Factura::where('reseña_id', '!=', 'null')->get()
+    ]);
 });
 
 //Mis citas
@@ -45,6 +49,9 @@ Route::get('reseñas/dejar/{id}', [ReseñaController::class, 'update'])
 Route::resource('gestion', 'GestionCitasController')
 ->middleware('auth.admin');
 
+Route::get('gestion/borrar/seguro/{id}', [GestionCitasController::class, 'show'])
+->middleware('auth.admin');
+
 Route::get('gestion/borrar/{id}', [GestionCitasController::class, 'destroy'])
 ->middleware('auth.admin');
 
@@ -55,6 +62,18 @@ Route::resource('gestionusers', 'GestionUsersController')
 
 Route::get('gestionUsers/borrar/{id}', [GestionUsersController::class, 'destroy'])
 ->middleware('auth.admin');
+
+//Gestion reseñas
+Route::resource('gestionresenas', 'GestionResenasController')
+->middleware('auth.admin');
+
+Route::get('gestionResenas/borrar/{id}', [GestionResenasController::class, 'destroy'])
+->middleware('auth.admin');
+
+//Trabajos
+Route::get('/trabajos', function () {
+    return view('trabajos');
+});
 
 
 //Cita

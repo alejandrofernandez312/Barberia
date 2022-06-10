@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Factura;
-use App\Models\Servicio;
 use App\Models\Reseña;
-use App\User;
+use App\Models\Factura;
 
-class GestionCitasController extends Controller
+class GestionResenasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +16,8 @@ class GestionCitasController extends Controller
     public function index()
     {
         //
-        return view('Gestion.gestionCitas', [
-            'facturas' => Factura::all()
+        return view('GestionReseña.gestionReseña', [
+            'facturas' => Factura::where('reseña_id', '!=', 'null')->get()
         ]);
     }
 
@@ -53,7 +51,7 @@ class GestionCitasController extends Controller
     public function show($id)
     {
         //
-        return view('verificarBorrado', [
+        return view('GestionReseña.verificarBorrado', [
             'factura' => Factura::find($id)
         ]);
     }
@@ -67,10 +65,8 @@ class GestionCitasController extends Controller
     public function edit($id)
     {
         //
-        return view('Gestion.modificarCita', [
-            'factura' => Factura::find($id),
-            'clientes' => User::all(),
-            'servicios' => Servicio::all()
+        return view('GestionReseña.modificarReseña', [
+            'factura' => Factura::find($id)
         ]);
     }
 
@@ -84,15 +80,20 @@ class GestionCitasController extends Controller
     public function update(Request $request, $id)
     {
         //
+        // $request->validate([
+        //     'name' => 'required|string',
+        //     'surnames' => 'required|string',
+        //     'email' => 'required|email', 
+        //     'phone' => 'required|numeric',
+        // ]);
 
-        $factura = Factura::find($id);
-        $factura->start = $request->fecha;
-        $factura->cliente_id = $request->cliente;
-        $factura->servicio_id = $request->servicio;
-        $factura->save();
+        $reseña = Reseña::find($id);
+        $reseña->descripcion = $request->textArea;
+        $reseña->puntuacion = $request->puntuacion;
 
-        return redirect()->route('gestion.index');
+        $reseña->save();
 
+        return redirect()->route('gestionresenas.index');
     }
 
     /**
@@ -104,14 +105,9 @@ class GestionCitasController extends Controller
     public function destroy($id)
     {
         //
-        $factura = Factura::find($id);
-        
-        // if($factura->reseña_id != null){
-        //     $factura->reseña()->delete();
-        // }
-        
-        $factura->delete();
+        $reseña = Reseña::find($id);
+        $reseña->delete();
 
-        return redirect()->route('gestion.index');
+        return redirect()->route('gestionresenas.index');
     }
 }

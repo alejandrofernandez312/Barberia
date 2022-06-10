@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Factura;
 use App\Models\Servicio;
+use Datetime;
 use Auth;
 
 
@@ -51,15 +52,18 @@ class CitaController extends Controller
         $servicio = Servicio::find($request->servicio);
 
         $factura = new Factura;
-        $factura->start = $request->fechacita;
 
+        $date = new DateTime($request->fechacita);
+        $date->format('Y-m-d H:i:s');
+        $factura->start = $date;
+        
         //Sumar minutos del servicio a la fecha para crear la fecha end
         $nuevaFecha = strtotime ( '+' . $servicio->tiempo .'minutes' , strtotime ($request->fechacita) );
         $nuevaFecha = date ( 'Y-m-d H:i:s' , $nuevaFecha); 
         $factura->end = $nuevaFecha;
         
         $factura->servicio_id = $request->servicio;
-        $factura->cliente_id = Auth::user()->id;
+        $factura->cliente_id =$request->cliente;
         $factura->save();
 
         return redirect('/citas');

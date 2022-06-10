@@ -27,9 +27,19 @@
             <form action="{{ route('citas.store') }}" method="POST" enctype="multipart/form-data">
               @csrf
               <div>
-                {{-- fechacita --}}
-                <label for="fechacita" class="form-label" >Fecha cita: </label>
-                <input type="text" class="form-control" name="fechacita" id="lblFechacita" value="Fecha" readonly>
+                <input type="hidden" name="id" id="idCita">
+
+                 {{-- fechacita --}}
+                 <label for="fechacita" class="form-label" id="fechaCita2">Fecha cita: </label>
+                 <input type="text" class="form-control" name="fechacita" id="lblFechacita" value="Fecha" readonly>
+
+                {{-- fecha --}}
+                <label for="fecha" class="form-label" id="fechaCita">Fecha cita: </label>
+                <input type="date" class="form-control" name="fecha" id="lblFecha" >
+
+                <label for="hora" class="form-label" id="horaCita">Hora cita: </label>
+                <input type="time" class="form-control" name="hora" id="lblHora" value="" min="09:00" max="18:00">
+                
                 @if(auth()->user())
                   {{-- nombre --}}
                   <label for="nombre" class="form-label admin">Nombre: </label>
@@ -95,7 +105,7 @@
           
           <input type="submit" class="btn btn-primary" value="Pedir cita">
           @if(auth()->user()->esAdmin())
-            <input type="button" class="btn btn-success" value="Modificar cita" onclick="">
+            <input type="button" class="btn btn-success" value="Modificar cita" onclick="modificarCita()">
             <input type="button" class="btn btn-danger" id="btBorrar" value="Cancelar cita" onclick="cancelarCita()">
           @endif
           <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Volver</button>
